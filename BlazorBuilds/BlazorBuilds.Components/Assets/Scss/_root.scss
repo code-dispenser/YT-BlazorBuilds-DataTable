@@ -1,0 +1,24 @@
+﻿:root {
+    --control-border-bg: silver;
+    //variables brought in from the Blaozr builds pager video and project
+    --fs-label: 0.875rem;
+    --control-label-text-clr: #00001A;
+    --control-focus-clr: #000080;
+    --control-focus-clr-rgb-val: 0,0,128;
+    --control-selection-clr: #4D4DA6;
+    --control-selection-text-clr: #FFFFFF;
+
+    //variables brought in from the Blazor builds debounce filter video and project (excluidng one already above)
+
+    //--control-label-text-clr: #1a1a1a;
+
+    --control-border-radius: 0.25rem;
+    --control-error-text-clr: #d92d2b;
+    --control-label-hint-text-clr: #737373;
+    --success-clr: #28a745;
+}
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}

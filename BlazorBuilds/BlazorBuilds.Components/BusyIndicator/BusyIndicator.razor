@@ -1,0 +1,49 @@
+﻿<span id="@_ariaLiveID" role="alert" class="screen-reader-only">@AriaLiveText</span>
+
+@if (true == IsLoading)
+{
+    <div class="@_overlayClasses">
+        <div class="@_contentClasses" style="background-color:@CssBgColour">
+            <div class="busy-indicator__spinner"></div>
+            @if (false == String.IsNullOrWhiteSpace(BusyText))
+            {
+                <div class="busy-indicator__text">
+                    @BusyText
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@ChildContent
+
+@code {
+
+    public enum OverlayPosition : int {Container = 0, Screen = 1}
+    public enum ContentPosition : int {Top = 0, Centre = 1}
+    public enum ContentDirection: int {Horizonal = 0, Vertical = 1}
+
+    private string _overlayClasses = "busy-indicator";
+    private string _contentClasses = "busy-indicator__content";
+    private string _ariaLiveID     = Guid.NewGuid().ToString();
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public OverlayPosition  OverlayFixAt { get; set; } = OverlayPosition.Screen;
+    [Parameter] public ContentPosition  ContentAlign { get; set; } = ContentPosition.Top;
+    [Parameter] public ContentDirection Direction    { get; set; } = ContentDirection.Horizonal;
+
+    [Parameter] public bool   IsLoading    { get; set; } = false;
+    [Parameter] public string BusyText     { get; set; } = String.Empty;
+    [Parameter] public string CssBgColour  { get; set; } = "rgba(0,0,128,0.8);";
+    [Parameter] public string AriaLiveText { get; set; } = String.Empty;
+
+    protected override void OnParametersSet()
+    {
+        _overlayClasses = OverlayFixAt == OverlayPosition.Container ? "busy-indicator busy-indicator--unfixed" : "busy-indicator";
+        _overlayClasses += ContentAlign == ContentPosition.Centre ? " busy-indicator--centred" : String.Empty;
+
+        _contentClasses = Direction == ContentDirection.Horizonal ? "busy-indicator__content" : "busy-indicator__content busy-indicator__content--column";
+        base.OnParametersSet();
+    }
+}

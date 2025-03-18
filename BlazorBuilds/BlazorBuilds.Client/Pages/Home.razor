@@ -1,0 +1,50 @@
+﻿@inject CustomerService _customerService;
+@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, <span style="text-decoration:line-through">world!</span> Accessible Data Table</h1>
+
+<p>
+    <b>Note:</b> Why is it called Data Table and not Data Grid? I call it a Data Table and not a Data Grid due to the aria authoring patterns. Assistive technologies expect grids to have all of the keyboard support
+    to work with something more like an Excel spreadsheet where every cell is editable. This grid/table does not cater for cells being editable, but can have inputs within certain cells, it aligns with the aria authoring pattern for tables, hence Data Table.<br />
+</p>
+
+<p style="margin-top:1.5rem;">The Data Table component can work in conjunction with other standalone components that we have built such as the Paging Component and Text Debounce Filter to provide pagination and filtering support.</p>
+
+<p>The Data Table itself provides the sorting, styling, templating and row selections.</p>
+
+<p>I have copy pasted the code from the Busy Indicator project, the Paging Project and the Text Debounce project so you could seamlessly step through any part of the code if necessary.</p>
+
+<p>The code makes use of Grpc Services to communicate with the backend server to access a Sqlite database file, this Grpc communication is structured the same as my Grpc Service video/project.</p>
+
+<p>
+    It should be noted that if this was for production I would have included other components such as the Offline Indicator service to check for a connection before trying to get
+    data via the Grpc Service. If the Data Table required multiple row actions I would have also included the DropDownMenu button (that we previously built) in a custom column (DataTemplateColumn) for those actions as demonstrated
+    in the DownDrop Menu project/video.
+ </p>
+
+ <p>Below are the links to all of the GitHub repositories that contain the individual projects used in this project as well as those just mentioned. The YouTube video link for each project is within the
+     readme / home page for each of the listed repositories.
+  </p>
+
+ <ul style="display:flex;flex-direction:column;list-style:none;margin:0;padding:0;gap:0.5rem;">
+    <li>
+        <a href="https://github.com/code-dispenser/YT-BlazorBuilds-DebounceFilter" target="_blank">Repo for: Building an Accessible Debounce Filter Component (Opens in new window)</a>
+    </li>
+    <li>
+        <a href="https://github.com/code-dispenser/YT-BlazorBuilds-Pager" target="_blank">Repo for: Blazor Builds - Building an Accessible Paging Component (Opens in new window)</a>
+    </li>
+    <li>
+        <a href="https://github.com/code-dispenser/YT-BlazorBuilds-BusyIndicator" target="_blank">Repo for: Build a Custom Busy Indicator for Your Blazor Web Apps (.NET 8) (Opens in new window)</a>
+    </li>
+    <li>
+        <a href="https://github.com/code-dispenser/YT-BlazorBuilds-DropDownMenu" target="_blank">Repo for: Blazor Builds: We build an Accessible Multilevel DropDown Menu Component (Opens in new window)</a>
+    </li>
+     <li>
+        <a href="https://github.com/code-dispenser/YT-BlazorBriefs-GrpcCodeFirst" target="_blank">Repo for: Blazor Briefs: Using gRPC Code-First in Blazor WebAssembly (Opens in new window)</a>
+     </li>
+    <li>
+        <a href="https://github.com/code-dispenser/YT-BlazorBuilds-OfflineIndicator" target="_blank">Repo for: Offline Indicator Component & Service for .NET 8 Blazor WebAssembly (Opens in new window)</a>
+    </li>
+ </ul>

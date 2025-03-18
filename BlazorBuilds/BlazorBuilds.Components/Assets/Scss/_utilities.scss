@@ -1,0 +1,27 @@
+﻿.text-align-left {
+    text-align: left;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.text-align-centre {
+    text-align: center;
+}
+
+.screen-reader-only {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    color: transparent;
+    border: 0;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    overflow: hidden;
+}

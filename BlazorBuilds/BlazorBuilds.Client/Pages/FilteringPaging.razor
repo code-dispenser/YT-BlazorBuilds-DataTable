@@ -1,0 +1,96 @@
+﻿@inject CustomerService _customerService;
+
+@page "/filtering-paging"
+<h1>Using the paging and debounce filter components with the data table.</h1>
+
+<p style="margin-top:1.5rem;">
+    The data table has place holders, both above and below the table rows for pagers, and a place holder above the rows for a debounce filter so they can be contained within the table component, keeping things together.<br />
+    You do not need to place them within the Data Table, as these are separate components you can place them anywhere, it makes no difference to the functionality. For this example I have used a compact pager above 
+    the rows and a pager using the large pager size with the input box show.   
+</p>
+<p>
+    The Data Table accepts a Func&lt;T,bool&gt; for its FilterRule parameter. When the Debounce filter raises its event containing the entered text, that information is used for a function that is then provided to the 
+    FilterRule parameter. The filter rule provided to the Data Table, after the set debounce time of 300ms will check every field in every row if contains the text in the filter. <br />
+</p>
+<p>
+    The FilterRule will always check the unfiltered data source i.e if you enter a character and it filters the data, another character does not filter the filtered data, both characters are used to filter the
+    unfiltered data.
+</p>
+<p>
+    The Data Table with paging will display a scrollbar if the table does not have enough height to display the rows in the page. Virtualization is not used in this instance.
+</p>
+<BusyIndicator IsLoading="@_isLoading" BusyText="... Searching ..." AriaLiveText="@_ariaLoadingText" />
+
+<SearchDemo OnSubmitSearch="HandleSearch" />
+
+<div class="@(_tableVisible ? null : "screen-reader-only")" style="height:@(_tableVisible ? "600px" : "1px");">
+
+    <DataTable TData="CustomerSearchResult" DefaultSortColumnIndex="3" DataSource="@_searchResults" AriaTableTitle="Customer search results:" PagingInfo="@_pagingInfo"
+    ShowTableTitle="true" FilterRule="@_filterRule">
+        <TopPager>
+            <Pager AriaPagerLabel="Customer results pager" @bind-CurrentPage="@_pagingInfo.CurrentPage" ItemsPerPage="@_pagingInfo.ItemsPerPage"
+            ItemCount="@_pagingInfo.ItemCount" TotalItemCount="@_pagingInfo.TotalItemCount" DisplaySize="PagerDisplaySize.Compact" DisplayInfo="PagerInfoDisplay.None" />
+        </TopPager>
+        <Filter>
+            <TextDebounce @ref=TextDebounceRef LabelText="Filter customers:" HintText="Table will update as you type" ShowHint="true" OnDebouncedText="HandleDebouncedText" DelayMs="300" />
+        </Filter>
+        <DataTableColumns>
+            <DataPropertyColumn DataProperty="s => s.FirstName" DisplayName="First name" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.LastName" DisplayName="Surname" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.Company" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.Country" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.SubscriptionDate" DisplayName="Date" IsSortable="true" Format="yyyy-MM-dd" Alignment="Alignment.Center" HeaderStyle="min-width:15ch;" />
+
+        </DataTableColumns>
+
+        <BottomPager>
+            <Pager AriaPagerLabel="Customer results pager" @bind-CurrentPage="@_pagingInfo.CurrentPage" ItemsPerPage="@_pagingInfo.ItemsPerPage"
+            ItemCount="@_pagingInfo.ItemCount" TotalItemCount="@_pagingInfo.TotalItemCount" ShowInputBox="true" NavigationType="PagerNavType.Button" DisplaySize="PagerDisplaySize.Large" />
+        </BottomPager>
+
+    </DataTable>
+
+</div>
+
+@code {
+    public TextDebounce? TextDebounceRef { get; set; }
+
+    private List<CustomerSearchResult> _searchResults = [];
+
+    private bool       _tableVisible    = false;
+    private bool       _isLoading       = false;
+    private string     _ariaLoadingText = String.Empty;
+    private PagingInfo _pagingInfo      = new(0, 0, 0, 10);
+
+    private Func<CustomerSearchResult, bool>? _filterRule = null;
+
+    private async Task HandleDebouncedText(DebouncedTextResult debouncedText)
+    {
+        if (debouncedText.IsValid)
+        {
+            _filterRule = (data) => data.FirstName.Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || data.LastName.Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || data.Company.Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || data.Country.ToString().Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || (data.SubscriptionDate?.ToString() ?? string.Empty).Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase);
+
+
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public async Task HandleSearch(CustomerSearch query)
+    {
+       
+        _ariaLoadingText = "Searching";
+         _isLoading       = true;
+        //await TextDebounceRef!.ClearTextValue();
+         _searchResults   = (await _customerService.CustomerSearch(query)).SearchResults.ToList();
+        _tableVisible    = true;
+        _isLoading       = false;
+        _ariaLoadingText = $"Search completed, {_searchResults.Count} results returned.";
+
+    }
+
+
+}

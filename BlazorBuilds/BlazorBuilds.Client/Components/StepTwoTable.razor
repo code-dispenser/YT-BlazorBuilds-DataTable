@@ -1,0 +1,48 @@
+﻿@typeparam TData
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+            <th>Temp. (F)</th>
+            <th>Summary</th>
+            @*
+                What we would like is to use a loop using some sort of column collection and add the columns name to a th element.
+
+                foreach(var column in _dataTableColumns)
+                {
+                    <th>column.Title</td>
+                }
+            *@
+        </tr>
+    </thead>
+    <tbody>
+
+        <!-- As we know we have a weather object, the field names and number of columns lets cheat  -->
+        @foreach (var rowItem in DataSource)
+        {
+            @if (rowItem is null) continue;
+            <tr>
+                <td>@rowItem!.GetType()?.GetProperty("Date")?.GetValue(rowItem)</td>
+                <td>@rowItem!.GetType()?.GetProperty("TemperatureC")?.GetValue(rowItem)</td>
+                <td>@rowItem!.GetType()?.GetProperty("TemperatureF")?.GetValue(rowItem)</td>
+                <td>@rowItem!.GetType()?.GetProperty("Summary")?.GetValue(rowItem)</td>
+
+                @*
+                    What we would like is another foreach loop using some sort of column collection and using the property/field name.
+
+                    foreach(var column in _dataTableColumns)
+                    {
+                        <td>@rowItem!.GetType()?.GetProperty(@column.fieldName)?.GetValue(rowItem)</td>
+                    }
+                *@
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter] public List<TData> DataSource { get; set; } = [];
+}

@@ -1,0 +1,60 @@
+﻿@typeparam TData
+@* 
+    We now add the CascadingTypeParameter so the Type filters down to our column component. 
+    If we do not add this then we would need to add TData ="OurObjectType" for each column on the building the component page where our component is used. 
+*@
+@attribute [CascadingTypeParameter(nameof(TData))] 
+@*
+    We also need to make a reference to the parent component that contains the column collection available to the the child column components.
+    To do this, we use a cascading parameter, just passing this (our StepThreeTable parent component)
+*@
+<CascadingValue Value="this" IsFixed="true">@*The columns do not have markup, i.e we do not need to wrap the table markup putting the @DataTableColumns where the output would appear *@
+    @DataTableColumns
+</CascadingValue>
+
+@if (_dataTableColumns.Count == 0) return; @*Nothing to do, the parent has just loaded with no columns added yet*@
+
+<table class="table">
+    <thead>
+        <tr>
+            @foreach(var column in _dataTableColumns)
+            {
+                <th>@column.Title</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rowItem in DataSource)
+        {
+            @if (rowItem is null) continue;
+            <tr>
+                @foreach(var column in _dataTableColumns)
+                {
+                    <td>@rowItem!.GetType()?.GetProperty(column.FieldName)?.GetValue(rowItem)</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter] public List<TData>     DataSource       { get; set; } = [];
+    [Parameter] public RenderFragment? DataTableColumns { get; set; } = default;//Named instead of just using the default ChildContext so user has to add the <DataTableColumns> tag, the columns go inside this.
+
+    private List<OurTableColumn<TData>> _dataTableColumns = [];
+   
+    public void AddColumn(OurTableColumn<TData> column) //We need this so each column can add themselves to the column collection.
+    {
+        @if (false == _dataTableColumns.Contains(column)) _dataTableColumns.Add(column);
+    }
+    /*
+        * IMPORTANT. Unless you have some sort of event occurring that causes another render, you will need to tell blazor that column components have been added to its collection
+        * The parent component (this) gets initialized first and will render but there are no columns yet. Then each column will get initialized adding themselves to the collection,
+        * so we force a render to have them shown, we only need to do this on the very first parent render.
+    */
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (true == firstRender) StateHasChanged();
+    }
+
+}

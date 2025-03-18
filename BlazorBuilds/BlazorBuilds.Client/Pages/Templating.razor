@@ -1,0 +1,180 @@
+﻿@inject CustomerService _customerService;
+
+@page "/templating"
+<style> <!-- Only using embedded style to keep it seperate from the actual blaozr build components style sheets -->
+    .delete-button {
+    height: 2rem;
+    display: flex;
+    width: 100px;
+    align-items: center;
+    appearance: none;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    border-radius: 0.25rem;
+    border: 1px solid silver;
+    outline: none;
+    font-size: 0.875rem;
+    background-color: rgba(0, 0, 128, 0.05);
+    cursor: pointer;
+    gap:0.5rem;
+    width:100%;
+    }
+
+    .delete-button:active {
+    transform: scale(0.97);
+    filter: brightness(95%);
+    outline: none;
+    }
+
+    .delete-button:hover {
+    filter: brightness(120%);
+    }
+
+    .delete-button:focus {
+    outline-offset: 0.25rem;
+    outline: 2px solid #000080;
+    }
+
+    .trash-icon {
+    display: inline-block;
+    min-width: 1rem;
+    min-height: 1rem;
+    --svg-trash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -2 24 24'%3E%3Cpath fill='%23000' d='M6 2V1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-.133l-.68 10.2a3 3 0 0 1-2.993 2.8H5.826a3 3 0 0 1-2.993-2.796L2.137 7H2a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm10 2H2v1h14zM4.141 7l.687 10.068a1 1 0 0 0 .998.932h6.368a1 1 0 0 0 .998-.934L13.862 7zM7 8a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1m4 0a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1'/%3E%3C/svg%3E");
+    background-color: currentColor;
+    mask-image: var(--svg-trash);
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+
+    }
+
+    .united-kingdom-flag-icon {
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Cpath fill='%2300247d' d='M0 9.059V13h5.628zM4.664 31H13v-5.837zM23 25.164V31h8.335zM0 23v3.941L5.63 23zM31.337 5H23v5.837zM36 26.942V23h-5.631zM36 13V9.059L30.371 13zM13 5H4.664L13 10.837z'/%3E%3Cpath fill='%23cf1b2b' d='m25.14 23l9.712 6.801a4 4 0 0 0 .99-1.749L28.627 23zM13 23h-2.141l-9.711 6.8c.521.53 1.189.909 1.938 1.085L13 23.943zm10-10h2.141l9.711-6.8a4 4 0 0 0-1.937-1.085L23 12.057zm-12.141 0L1.148 6.2a4 4 0 0 0-.991 1.749L7.372 13z'/%3E%3Cpath fill='%23eee' d='M36 21H21v10h2v-5.836L31.335 31H32a4 4 0 0 0 2.852-1.199L25.14 23h3.487l7.215 5.052c.093-.337.158-.686.158-1.052v-.058L30.369 23H36zM0 21v2h5.63L0 26.941V27c0 1.091.439 2.078 1.148 2.8l9.711-6.8H13v.943l-9.914 6.941c.294.07.598.116.914.116h.664L13 25.163V31h2V21zM36 9a3.98 3.98 0 0 0-1.148-2.8L25.141 13H23v-.943l9.915-6.942A4 4 0 0 0 32 5h-.663L23 10.837V5h-2v10h15v-2h-5.629L36 9.059zM13 5v5.837L4.664 5H4a4 4 0 0 0-2.852 1.2l9.711 6.8H7.372L.157 7.949A4 4 0 0 0 0 9v.059L5.628 13H0v2h15V5z'/%3E%3Cpath fill='%23cf1b2b' d='M21 15V5h-6v10H0v6h15v10h6V21h15v-6z'/%3E%3C/svg%3E");
+    }
+</style>
+
+<h1>Header templates, cell templates and additional custom columns.</h1>
+
+<p style="margin-top:1.5rem;">
+    The normal column type is the DataPropertyColumn that allows for customisation of the its row cells using the RenderFragment parameter CellTemplate. To add a new column with both a HeaderTemplate and CellTemplate the
+    DataTemplateColumn is used.
+</p>
+
+<p>
+    The following example uses the DataTemplateColumn to add a custom column for row actions. In this instance a custom HeaderTemplate was not use so the standard styling was used for the column title.<br />
+</p>
+<p>
+    The example also uses a CellTemplate on a DataPropertyColumn that adds a union jack and a link to Buckingham Palace if the country is the United Kingdom.
+</p>
+<BusyIndicator IsLoading="@_isLoading" BusyText="... Searching ..." AriaLiveText="@_ariaLoadingText" />
+
+<SearchDemo OnSubmitSearch="HandleSearch" />
+
+<div class="@(_tableVisible ? null : "screen-reader-only")" style="height:@(_tableVisible ? "600px" : "1px");">
+
+    <DataTable TData="CustomerSearchResult" DefaultSortColumnIndex="3" DataSource="@_searchResults" AriaTableTitle="Customer search results:" PagingInfo="@_pagingInfo"
+    ShowTableTitle="true" FilterRule="@_filterRule">
+
+        <Filter>
+            <TextDebounce @ref=TextDebounceRef LabelText="Filter customers:" HintText="Table will update as you type" ShowHint="true" OnDebouncedText="HandleDebouncedText" DelayMs="300" />
+        </Filter>
+        <DataTableColumns>
+            <DataPropertyColumn DataProperty="s => s.FirstName" DisplayName="First name" IsSortable="true"  />
+            <DataPropertyColumn DataProperty="s => s.LastName" DisplayName="Surname" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.Company" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.Country" IsSortable="true">
+                <CellTemplate Context="rowItem">
+                    @if (rowItem.Country == "United Kingdom")
+                    {
+                        <span style="display:inline-flex;align-items:center;gap:0.75rem;">
+                            <span class="united-kingdom-flag-icon" aria-hidden="true"></span>
+                            <a href="https://www.rct.uk/visit/buckingham-palace" target="_blank">
+                                @rowItem.Country
+                            </a>
+                        </span>
+
+                        return;
+                    }
+                    @rowItem.Country
+                </CellTemplate>
+            </DataPropertyColumn>
+            <DataPropertyColumn DataProperty="s => s.SubscriptionDate" DisplayName="Date" IsSortable="true" Format="yyyy-MM-dd" Alignment="Alignment.Center" HeaderStyle="min-width:15ch;" />
+            <DataTemplateColumn DisplayName="Action(s)" HeaderStyle="width:175px;" Alignment="Alignment.Center">
+                <CellTemplate Context="rowItem">
+                    <button type="button" class="delete-button" aria-label="Delete @($"{rowItem.FirstName} {rowItem.LastName}")" @onclick="() => HandleDeleteAction(rowItem)"> 
+                        <span class="trash-icon" aria-hidden="true"></span>
+                        <span>@rowItem.FirstName @rowItem.LastName</span>
+                    </button>
+                </CellTemplate>
+            </DataTemplateColumn>
+        </DataTableColumns>
+
+        <BottomPager>
+            <Pager AriaPagerLabel="Customer results pager" @bind-CurrentPage="@_pagingInfo.CurrentPage" ItemsPerPage="@_pagingInfo.ItemsPerPage"
+            ItemCount="@_pagingInfo.ItemCount" TotalItemCount="@_pagingInfo.TotalItemCount" ShowInputBox="true" NavigationType="PagerNavType.Button" DisplaySize="PagerDisplaySize.Medium" />
+        </BottomPager>
+
+    </DataTable>
+
+</div>
+
+@if(_tableVisible)
+{
+    <p>The following row was deleted from the local data source: @_deletedRowData</p>   
+}
+
+@code {
+    public TextDebounce? TextDebounceRef { get; set; }
+
+    private List<CustomerSearchResult> _searchResults = [];
+
+    private string     _deletedRowData  = String.Empty;
+    private bool       _tableVisible    = false;
+    private bool       _isLoading       = false;
+    private string     _ariaLoadingText = String.Empty;
+    private PagingInfo _pagingInfo      = new(0, 0, 0, 10);
+
+    private Func<CustomerSearchResult, bool>? _filterRule = null;
+
+    private async Task HandleDebouncedText(DebouncedTextResult debouncedText)
+    {
+        if (debouncedText.IsValid)
+        {
+            _filterRule = (data) => data.FirstName.Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || data.LastName.Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || data.Company.Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || data.Country.ToString().Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || (data.SubscriptionDate?.ToString() ?? string.Empty).Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase);
+
+
+            await InvokeAsync(StateHasChanged);
+        }
+
+    }
+    public void HandleDeleteAction(CustomerSearchResult rowItem)
+    {
+        /*
+            * If you strangely decide to use both row selection with bindings as well as custom actions such as remove a row, remember remove the selected row from its collection as well. 
+         */
+        _deletedRowData = $@"Customer ID: {rowItem.CustomerID}, First name: {rowItem.FirstName}, Surname: {rowItem.LastName}, Country: {rowItem.Country},
+                                Company name: {rowItem.Company} Subscription date: {rowItem.SubscriptionDate}";
+
+        _searchResults.Remove(rowItem);
+    }
+    public async Task HandleSearch(CustomerSearch query)
+    {
+        _ariaLoadingText = "Searching";
+        _isLoading       = true;
+        await TextDebounceRef!.ClearTextValue();
+        _searchResults   = (await _customerService.CustomerSearch(query)).SearchResults.ToList();
+        _deletedRowData  = "No delete action taken yet.";
+        _tableVisible    = true;
+        _isLoading       = false;
+        _ariaLoadingText = $"Search completed, {_searchResults.Count} results returned.";
+    }
+
+
+}

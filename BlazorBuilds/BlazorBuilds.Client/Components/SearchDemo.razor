@@ -1,0 +1,127 @@
+﻿
+<style>
+
+    .text-input {
+    display: inline-grid;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: auto;
+    align-items: center;
+    padding: 0.5rem;
+    }
+
+    .text-input:focus-within, .text-input:hover {
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    }
+
+    .text-input:focus-within .text-input__hint, .text-input:hover .text-input__hint {
+    border-top: 2px solid #000080;
+    }
+
+    .text-input__label {
+    font-size: 0.875rem;
+    grid-row: 1/2;
+    }
+
+    .text-input__data {
+    grid-row: 2/3;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    background-color: transparent;
+    }
+
+    .text-input__hint {
+    margin: 0;
+    font-size: 0.875rem;
+    color: grey;
+    padding-top: 0.5rem;
+    grid-row: 3/4;
+    border-top: 2px solid grey;
+    }
+
+    .controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom:2rem;
+    }
+
+    .search-button {
+    height: 2rem;
+    display: flex;
+    width: 100px;
+    align-items: center;
+    appearance: none;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    border-radius: 0.25rem;
+    border: 1px solid silver;
+    outline: none;
+    font-size: 0.875rem;
+    background-color: rgba(0, 0, 128, 0.05);
+    cursor: pointer;
+    }
+
+    .search-button:active {
+    transform: scale(0.97);
+    filter: brightness(95%);
+    outline: none;
+    }
+
+    .search-button:hover {
+    filter: brightness(120%);
+    }
+
+    .search-button:focus {
+    outline-offset: 0.25rem;
+    outline: 2px solid #000080;
+    }
+
+    .search-icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: inline-block;
+    --svg-search: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m19.485 20.154l-6.262-6.262q-.75.639-1.725.989t-1.96.35q-2.402 0-4.066-1.663T3.808 9.503T5.47 5.436t4.064-1.667t4.068 1.664T15.268 9.5q0 1.042-.369 2.017t-.97 1.668l6.262 6.261zM9.539 14.23q1.99 0 3.36-1.37t1.37-3.361t-1.37-3.36t-3.36-1.37t-3.361 1.37t-1.37 3.36t1.37 3.36t3.36 1.37'/%3E%3C/svg%3E");
+    background-color: currentColor;
+    mask-image: var(--svg-search);
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    }
+
+</style>
+<form onsubmit="@HandleOnSubmit" novalidate autocomplete="off">
+    <div class="controls">
+
+        <div class="text-input">
+            <label for="textboxFirstName" class="text-input__label">First name:</label>
+            <input id="textboxFirstName" class="text-input__data" type="text" @bind-value="_customerSearch.FirstName" autocomplete="off" aria-autocomplete="none" aria-describedby="firstNameHint" />
+            <p id="firstNameHint" class="text-input__hint">Optional, starts with the entered characters.</p>
+        </div>
+        <div class="text-input">
+            <label for="textboxSurname" class="text-input__label">Surname:</label>
+            <input id="textboxSurname" class="text-input__data" type="text" @bind-value="_customerSearch.LastName" autocomplete="off" aria-autocomplete="none" aria-describedby="lastNameHint" />
+            <p id="lastNameHint" class="text-input__hint">Optional, and starts with the entered characters.</p>
+        </div>
+        <div class="text-input">
+            <label for="textboxCompanyName" class="text-input__label">Company name:</label>
+            <input id="textboxCompanyName" class="text-input__data" type="text" @bind-value="_customerSearch.CompanyName" autocomplete="off" aria-autocomplete="none" aria-describedby="companyNameHint" />
+            <p id="companyNameHint" class="text-input__hint">Optional, and starts with the entered characters.</p>
+        </div>
+        <div style="width:100%;">
+            <button type="submit" class="search-button" aria-label="Search">
+                <span class="search-icon" aria-hidden="true"></span>
+                <span>Search</span>
+            </button>
+        </div>
+    </div>
+</form>
+@code {
+    [Parameter] public EventCallback<CustomerSearch> OnSubmitSearch { get; set; }
+
+    private CustomerSearch _customerSearch = new CustomerSearch(null, null, null);
+
+    public async Task HandleOnSubmit()
+    
+        => await OnSubmitSearch.HasDelegate.WhenTrue(() => OnSubmitSearch.InvokeAsync(_customerSearch));
+    
+}

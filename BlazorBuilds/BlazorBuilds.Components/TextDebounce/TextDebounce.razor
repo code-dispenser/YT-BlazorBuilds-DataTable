@@ -1,0 +1,98 @@
+﻿@inject     IJSRuntime       _jsRuntime
+@implements IAsyncDisposable
+
+<div class="@GlobalValues.TextDebounce_Class" data-static="@GlobalValues.GetStyleAsValue(StyleAs)">
+
+    <span id="@_liveRegionID" class="@GlobalValues.TextDebounce_SR_Only_Class" role="status"></span>
+
+    <label for="@_labelID" class="@GlobalValues.TextDebounce_Label_Class">@LabelText</label>
+
+    <input id="@_labelID" @ref="_textInputRef" class="@GlobalValues.TextDebounce_Text_Input_Class" type="text" autocomplete="off" aria-describedby="@_hintID" />
+
+    @if (true == ValidateEntry)
+    {
+        <span aria-hidden="true" class="@GlobalValues.TextDebounce_State_Icon_Class"></span>
+    }
+
+    <p class="@GlobalValues.TextDebounce_Hint_Content_Class">
+        <span id ="@_hintID" class="@GetHintTextClasses(ShowHint)">@HintText</span>
+    </p>
+
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string LabelText { get; set; } = default!;
+    [Parameter, EditorRequired] public string HintText  { get; set; } = default!;
+
+    [Parameter] public int     DelayMs         { get; set; } = 300;
+    [Parameter] public string? AriaInvalidText { get; set; } = default;
+    [Parameter] public bool    ShowHint        { get; set; } = false;
+    [Parameter] public string? RegexPattern    { get; set; } = default;
+    [Parameter] public bool    ValidateEntry   { get; set; } = false;
+    [Parameter] public StyleAs StyleAs         { get; set; } = StyleAs.Dynamic;
+
+    [Parameter] public Func<DebouncedTextResult, Task>? OnDebouncedText { get; set; }//Unlike EventCallBack this does not cause render in parent
+
+    private ElementReference                     _textInputRef { get; set; }
+    private IJSObjectReference?                  _jsModule;
+    private DotNetObjectReference<TextDebounce>? _dotNetRef;
+
+    private string _labelID         = Guid.NewGuid().ToString();
+    private string _hintID          = Guid.NewGuid().ToString();
+    private string _liveRegionID    = Guid.NewGuid().ToString();
+    private string _regexPattern    = GlobalValues.TextDebounce_Regex_Pattern;
+    private int    _delayMs         = GlobalValues.TextBounce_DelayMs;
+    private string _ariaInvalidText = GlobalValues.TextDebounce_Aria_Invalid_Text;
+
+    protected override void OnInitialized()
+    {
+        if (true == String.IsNullOrWhiteSpace(LabelText)) throw new ArgumentNullException(nameof(LabelText), GlobalValues.LabelText_Exception_Message);
+        if (true == String.IsNullOrWhiteSpace(HintText))  throw new ArgumentNullException(nameof(HintText),  GlobalValues.HintText_Exception_Message);
+
+        _regexPattern    = String.IsNullOrWhiteSpace(RegexPattern) ? _regexPattern                   : RegexPattern;
+        _delayMs         = DelayMs < 1                             ? GlobalValues.TextBounce_DelayMs : DelayMs; 
+        _ariaInvalidText = String.IsNullOrEmpty(AriaInvalidText)   ? _ariaInvalidText                : AriaInvalidText;   
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+
+        => await firstRender.WhenTrue(() => RegisterTextDebounce(_textInputRef, nameof(HandleJSDebounce), _regexPattern, ValidateEntry, DelayMs, _liveRegionID, _ariaInvalidText));
+
+    private async Task RegisterTextDebounce(ElementReference textInputRef, string callBackName, string regesPattern, bool validateEntry, int delayMs, string liveRegionID, string liveText)
+    {
+        _dotNetRef = DotNetObjectReference.Create(this);
+
+        //typescript interface IDebounceConfiguration { blazorCallBackRef: any, callBackName: string, regexPattern: string, validateEntry: boolean, delayMs: number liveRegionID: string, string, liveText:string};
+        var configuration = new { blazorCallBackRef = _dotNetRef, callBackName = callBackName, regexPattern = regesPattern, 
+            validateEntry = validateEntry, delayMs = delayMs, liveRegionID= liveRegionID, liveText= liveText };
+
+        _jsModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", GlobalValues.JavaScript_File_Path);
+
+        await _jsModule.InvokeVoidAsync(GlobalValues.JavaScript_Register_Func, textInputRef, configuration);
+    }
+
+    public async Task ClearTextValue()
+
+        => await (_jsModule is not null).WhenTrue(() => _jsModule!.InvokeVoidAsync(GlobalValues.JavaScript_Clear_Text_Func, _textInputRef));
+
+    [JSInvokable]
+    public async Task HandleJSDebounce(DebouncedTextResult debouncedText)  
+  
+        => await (OnDebouncedText is not null).WhenTrue(() => OnDebouncedText!(debouncedText));
+
+    public string GetHintTextClasses(bool showHint)
+
+        => showHint ? GlobalValues.TextDebounce_Hint_Text_Class : $"{GlobalValues.TextDebounce_Hint_Text_Class} {GlobalValues.TextDebounce_Hint_Text_Hidden_Class}";
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_jsModule is not null)
+        {
+            await _jsModule.InvokeVoidAsync(GlobalValues.JavaScript_UnRegister_Func, _textInputRef);
+            await _jsModule.DisposeAsync();
+        }
+
+        _dotNetRef?.Dispose();
+    }
+   
+}

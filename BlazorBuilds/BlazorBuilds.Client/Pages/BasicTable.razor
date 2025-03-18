@@ -1,0 +1,78 @@
+﻿@inject CustomerService _customerService;
+
+@page "/basic-table"
+
+<h1>The basic Data Table component without using the filter and paging components.</h1>
+
+<p style="margin-top:1.5rem;">
+    By default, without paging the table will use the blazor virtualize component, to render rows without the virtualize component (not a good idea with lots of rows unless paging is used), set the VirtualizeItemSizePX parameter to 0.
+    When in use a default of 32 is passed to the virtualize component if a parameter value has not been provided.
+</p>
+<p>
+    The Data Table component will use whatever height is available, showing scrollbars when necessary. In this example I have placed the Data Table inside a div with a height of 450px. The backend Sqlite database has a customer table containing 
+    50,000 rows that is being used for the demo. The Data Table contains an internal spinner that is shown when sorting or filtering on more than 2,500 rows.<br />
+</p>
+<p>
+    The date column has its alignment set to centre and uses formatting to format the date time field to use "yyyy-MM-dd"<br />
+    All columns in this example have sorting enabled, but no default sort column has be set i.e if set it would sort on load.  Any new data loads will be sorted (within the Data Table component) on the column 
+    that the user last sorted on, if any.
+ </p>
+<p>
+    All searches are sent to the server via Grpc with an EF Core dbcontext being used to query the Sqlite data file which just contains a single Customer table.<br />
+    This example is not displaying the tables title, but this title is in use and available to assistive technologies.
+</p>
+<p>
+    Please note, the way in which virtualization component has to work it may add blank rows, so the number of rows reported to screen readers that has data may be off slightly. If this is an issue use the Pager component.
+</p>
+<p>
+    As mentioned in my Grpc project, from a cold start with no Grpc communication having taken place the very first request over Grpc will take a second longer than the other requests.
+</p>
+
+<BusyIndicator IsLoading="@_isLoading" BusyText="... Searching ..." AriaLiveText="@_ariaLoadingText" />
+
+<SearchDemo OnSubmitSearch="HandleSearch" />
+
+<div class="@(_tableVisible ? null : "screen-reader-only")" style="height:@(_tableVisible ? "450px" : "1px");">
+
+    <DataTable TData="CustomerSearchResult"  DefaultSortColumnIndex="-1" DataSource="@_searchResults" AriaTableTitle="Customer search results:" ShowTableTitle="false">
+
+        <DataTableColumns>
+            <DataPropertyColumn DataProperty="s => s.FirstName" DisplayName="First name" IsSortable="true"  />
+            <DataPropertyColumn DataProperty="s => s.LastName" DisplayName="Surname" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.Company" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.Country" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.SubscriptionDate" DisplayName="Date" IsSortable="true" Format="yyyy-MM-dd" Alignment="Alignment.Center" />
+        </DataTableColumns>
+    </DataTable>
+
+</div>
+
+@if (_tableVisible)
+{
+    <p style="margin-top:1.5rem;">@((MarkupString)_entriesFound)</p>
+}
+
+@code {
+
+    private List<CustomerSearchResult> _searchResults = [];
+
+    private bool   _tableVisible    = false;
+    private bool   _isLoading       = false;
+    private string _ariaLoadingText = String.Empty;
+
+    private string _entriesFound = String.Empty;
+
+    public async Task HandleSearch(CustomerSearch query)
+    {
+        Stopwatch stopWatch = Stopwatch.StartNew();
+
+        _ariaLoadingText = "Searching";
+        _isLoading       = true;
+        _searchResults   = (await _customerService.CustomerSearch(query)).SearchResults.ToList();
+        stopWatch.Stop();
+        _entriesFound    = $"Results: <b>{_searchResults.Count:N0} entries</b> returned <b>{stopWatch.ElapsedMilliseconds:N0}ms</b> using the search criteria (excludes sorting time if any column sort was used)";
+        _tableVisible    = true;
+        _isLoading       = false;
+        _ariaLoadingText = $"Search completed, {_searchResults.Count} results returned.";
+    }
+}

@@ -1,0 +1,126 @@
+﻿@inject CustomerService _customerService;
+@page "/row-selection"
+
+<h1>Row selection, single or multiple select modes are available.</h1>
+
+<p style="margin-top:1.5rem;">
+    When single or multiple select has been chosen via the Data Table parameters the rows get a mouse over effect and selected rows are styled differently. In single select mode only one 
+    row at a time can be selected.
+</p>
+
+<p>On selection or deselection an event is raised containing only the selected rows. Its the same event for either single or multiple selection.</p>
+
+<p>Selections are made using checkboxes, mouse users can select a row by clicking anywhere on the row, key board users use the space key on the checkbox to select it.</p>
+
+<p>As the selected rows use two way binding you can programmatically have rows selected. </p>
+
+<p>
+    This example is using the SelectionMode of multiple. Both the checkboxes and the associated column header use an aria-label attribute populated with the AriaSelectRowLabel parameter value so assistive technology
+    users know what these are for, by default this is set to "Select row".<br />
+    I put the checkbox column last as I thought screen reader users if reading the table using the virtual cursor would read the content
+    from left to right, and as such would know what the selection contained before making a selection etc.
+</p>
+<BusyIndicator IsLoading="@_isLoading" BusyText="... Searching ..." AriaLiveText="@_ariaLoadingText" />
+
+<SearchDemo OnSubmitSearch="HandleSearch" />
+
+<div class="@(_tableVisible ? null : "screen-reader-only")" style="height:@(_tableVisible ? "500px" : "1px");">
+
+    <DataTable TData="CustomerSearchResult" DefaultSortColumnIndex="3" DataSource="@_searchResults" AriaTableTitle="Customer search results:" PagingInfo="@_pagingInfo"
+    ShowTableTitle="true" FilterRule="@_filterRule" SelectionMode="SelectionMode.Multiple" @bind-SelectedRows="@_selectedRows">
+
+        <Filter>
+            <TextDebounce @ref=TextDebounceRef LabelText="Filter customers:" HintText="Table will update as you type" ShowHint="true" OnDebouncedText="HandleDebouncedText" DelayMs="300" />
+        </Filter>
+        <DataTableColumns>
+            <DataPropertyColumn DataProperty="s => s.FirstName" DisplayName="First name" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.LastName" DisplayName="Surname" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.Company" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.Country" IsSortable="true" />
+            <DataPropertyColumn DataProperty="s => s.SubscriptionDate" DisplayName="Date" IsSortable="true" Format="yyyy-MM-dd" Alignment="Alignment.Center" HeaderStyle="min-width:15ch;" />
+        </DataTableColumns>
+
+        <BottomPager>
+            <Pager AriaPagerLabel="Customer results pager" @bind-CurrentPage="@_pagingInfo.CurrentPage" ItemsPerPage="@_pagingInfo.ItemsPerPage"
+            ItemCount="@_pagingInfo.ItemCount" TotalItemCount="@_pagingInfo.TotalItemCount" ShowInputBox="true" NavigationType="PagerNavType.Button" DisplaySize="PagerDisplaySize.Medium" />
+        </BottomPager>
+
+    </DataTable>
+</div>
+
+@if (_tableVisible)
+{
+    <p>
+        Selected row(s) data:@if (_selectedRows.Count == 0)
+        {
+            <text>No row(s) selected;</text>
+        }
+
+        @if (_selectedRows.Count > 0)
+        {
+            <ul>
+                @foreach (var row in _selectedRows)
+                {
+                    <li>@GetSelectedRowText(row)</li>
+                }
+            </ul>
+        }
+
+    </p>
+}
+
+@code {
+    public TextDebounce? TextDebounceRef { get; set; }
+
+    private List<CustomerSearchResult> _searchResults = [];
+    private List<CustomerSearchResult> _selectedRows  = [];
+
+
+    private bool       _tableVisible    = false;
+    private bool       _isLoading       = false;
+    private string     _ariaLoadingText = String.Empty;
+    private PagingInfo _pagingInfo      = new(0, 0, 0, 10);
+
+    private Func<CustomerSearchResult, bool>? _filterRule = null;
+
+    private async Task HandleDebouncedText(DebouncedTextResult debouncedText)
+    {
+        if (debouncedText.IsValid)
+        {
+            _filterRule = (data) => data.FirstName.Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || data.LastName.Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || data.Company.Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || data.Country.ToString().Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase)
+                                    || (data.SubscriptionDate?.ToString() ?? string.Empty).Contains(debouncedText.TextValue, StringComparison.OrdinalIgnoreCase);
+
+
+            await InvokeAsync(StateHasChanged);
+        }
+
+    }
+
+    private async Task HandleSearch(CustomerSearch query)
+    {
+        _ariaLoadingText = "Searching";
+        _isLoading       = true;
+        await TextDebounceRef!.ClearTextValue();
+        _searchResults   = (await _customerService.CustomerSearch(query)).SearchResults.ToList();
+        _selectedRows    = [];//Important clear this and re-add any rows you want to programmatically set as selected. Uses ref equality so new search is new rows.
+        _tableVisible    = true;
+        _isLoading       = false;
+        _ariaLoadingText = $"Search completed, {_searchResults.Count} results returned.";
+    }
+
+    private void HandleSelectedRowsChanged(List<CustomerSearchResult> selectedRows)//If not using @bind-SelectedRows i.e manual binding, SelectedRowsChanged and SelectedRows parameter
+    {
+        _selectedRows = selectedRows;
+    }
+
+    private string GetSelectedRowText(CustomerSearchResult searchResult)
+
+        =>  $@"Customer ID: {searchResult.CustomerID}, First name: {searchResult.FirstName}, Surname: {searchResult.LastName}, Country: {searchResult.Country},
+              Company name: {searchResult.Company} Subscription date: {searchResult.SubscriptionDate}";
+
+
+    
+}

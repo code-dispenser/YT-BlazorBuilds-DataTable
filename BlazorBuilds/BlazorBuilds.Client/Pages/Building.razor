@@ -1,0 +1,91 @@
+﻿@page "/building"
+
+<h3>The basics of creating a generic Data Table component</h3>
+
+<p>
+    <b>Step one,</b> start with a non generic version, lets use the default blazor weather table code that uses a collection (array) of WeatherForecast objects<br />
+    Below is the result. The code used fixed text headers with a foreach statement to output each row,accessing the typed objects properties for the table cell data
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+            <th>Temp. (F)</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var forecast in forecasts)
+        {
+            <tr>
+                <td>@forecast.Date.ToShortDateString()</td>
+                <td>@forecast.TemperatureC</td>
+                <td>@forecast.TemperatureF</td>
+                <td>@forecast.Summary</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p><b>Step two,</b> use a typeparam attribute for the data type and add a foreach statement to uses this typeparam / generic type with reflection to get the data, easier than it sounds (<b>StepTwoTable</b> component result with a bit of cheating).</p>
+
+<StepTwoTable DataSource="forecastData" />
+
+<p>
+    <b>Step three,</b>, create a column component (with or without the markup, I prefer just having the markup in the parent) so you have the meta data for the reflection code and header information.<br />
+    Have the parent component hold a collection of these columns, using a CascadingValue to pass a reference down to the child column component so they can access the parent to add themselves to the column collection.<br />
+    I created the OurTableColumn for this exercise. (<b>StepThreeTable</b> component result).
+</p>
+<StepThreeTable TData="WeatherForecast" DataSource="forecastData">
+    <DataTableColumns>
+        <OurTableColumn Title="Date" FieldName="@nameof(WeatherForecast.Date)" />
+        <OurTableColumn Title="Temp. (C)" FieldName="@nameof(WeatherForecast.TemperatureC)" />
+        <OurTableColumn Title="Temp. (F)" FieldName="@nameof(WeatherForecast.TemperatureF)" />
+        <OurTableColumn Title="Summary" FieldName="@nameof(WeatherForecast.Summary)" />
+    </DataTableColumns>
+</StepThreeTable>
+
+<p><b>Step Four</b> add whatever you need, learning as you go. </p>
+
+<p><b>Note:</b> Only watch the part two video when you fully understand the StepThreeTable component and its related OurTableColumn component as otherwise it may be too confusing for you. 
+    Its not difficult but there are a lot of moving parts and concepts to understand, the more c# experience you have, the easier it will seem.
+</p>
+
+<p>
+    Dependent on you blazor knowledge and experience, I would watch my paging video first and make a simple paging component, ignoring the accessibility stuff. You could also make a debounce filter component without JavaScript, I used such code
+    in the paging component project and demo, so you could use that as a reference if you get stuck. 
+</p>
+
+@code {
+
+    private WeatherForecast[]     forecasts     = [];
+    private List<WeatherForecast> forecastData  = [];
+
+    protected override void OnInitialized()
+    {
+        CreateSetDataSources();
+    }
+
+    private void CreateSetDataSources()
+    {
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = startDate.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = summaries[Random.Shared.Next(summaries.Length)]
+            }).ToArray();
+
+        forecastData = forecasts.ToList();
+    }
+    private class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}

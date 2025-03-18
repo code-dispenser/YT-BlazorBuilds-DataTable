@@ -1,0 +1,133 @@
+﻿<style>
+    .page-filter-icon {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        --svg-page-filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2048 2048'%3E%3Cpath fill='%23000' d='M1152 1280h896v152l-256 288v328h-384v-328l-256-288zm512 392l234-264h-596l234 264v248h128zM1280 384v128H512V384zm-768 896v-128h512v128zm-384 384h1059l93 105v23H0V0h1536v1152h-128V128H128zm1152-896v128H512V768zM384 384v128H256V384zm0 384v128H256V768zm-128 512v-128h128v128z'/%3E%3C/svg%3E");
+        background-color: currentColor;
+        mask-image: var(--svg-page-filter);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+        margin-right:0.25rem;
+    }
+
+    .multi-select-icon {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        --svg-multi-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2048 2048'%3E%3Cpath fill='%23000' d='M2048 384v128H768V384zM768 768h1280v128H768zm0 384h1280v128H768zm0 384h1280v128H768zM478 990l68 68l-354 354l-178-178l68-68l110 110zm0-768l68 68l-354 354L14 466l68-68l110 110z'/%3E%3C/svg%3E");
+        background-color: currentColor;
+        mask-image: var(--svg-multi-select);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+        margin-right: 0.25rem;
+    }
+
+    .table-icon {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        --svg-table: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23000' d='M16 3v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2zm-1 0V2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v1zm0 1H1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM4.5 6a.5.5 0 0 1 0 1H2.496a.5.5 0 1 1 0-1zm9 0a.5.5 0 1 1 0 1h-6a.5.5 0 0 1 0-1zm-9 3a.5.5 0 0 1 0 1H2.496a.5.5 0 1 1 0-1zm9 0a.5.5 0 1 1 0 1h-6a.5.5 0 0 1 0-1zm-9 3a.5.5 0 1 1 0 1H2.496a.5.5 0 1 1 0-1zm9 0a.5.5 0 1 1 0 1h-6a.5.5 0 1 1 0-1z'/%3E%3C/svg%3E");
+        background-color: currentColor;
+        mask-image: var(--svg-table);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+        margin-right: 0.25rem;
+    }
+
+    .column-edit-icon {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        --svg-column-edit: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23000' d='M3 3.5a.5.5 0 0 1 .5-.5H4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-.5a.5.5 0 0 1 0-1H4a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-.5a.5.5 0 0 1-.5-.5M9 4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h.475a3 3 0 0 0-.043.155L9.22 17H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6.943l-1 1V5a1 1 0 0 0-1-1zm6 1v4.943l-1 1V5a2 2 0 0 1 2-2h.5a.5.5 0 0 1 0 1H16a1 1 0 0 0-1 1m-4.02 10.377l4.83-4.83a1.87 1.87 0 1 1 2.644 2.646l-4.83 4.829a2.2 2.2 0 0 1-1.02.578l-1.498.374a.89.89 0 0 1-1.079-1.078l.375-1.498a2.2 2.2 0 0 1 .578-1.02'/%3E%3C/svg%3E");
+        background-color: currentColor;
+        mask-image: var(--svg-column-edit);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+        margin-right: 0.25rem;
+    }
+
+    .css-icon {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        --svg-css: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM3.397 14.841a1.13 1.13 0 0 0 .401.823q.195.162.478.252q.284.091.665.091q.507 0 .859-.158q.354-.158.539-.44q.187-.284.187-.656q0-.336-.134-.56a1 1 0 0 0-.375-.357a2 2 0 0 0-.566-.21l-.621-.144a1 1 0 0 1-.404-.176a.37.37 0 0 1-.144-.299q0-.234.185-.384q.188-.152.512-.152q.214 0 .37.068a.6.6 0 0 1 .246.181a.56.56 0 0 1 .12.258h.75a1.1 1.1 0 0 0-.2-.566a1.2 1.2 0 0 0-.5-.41a1.8 1.8 0 0 0-.78-.152q-.439 0-.776.15q-.337.149-.527.421q-.19.273-.19.639q0 .302.122.524q.124.223.352.367q.228.143.539.213l.618.144q.31.073.463.193a.39.39 0 0 1 .152.326a.5.5 0 0 1-.085.29a.56.56 0 0 1-.255.193q-.167.07-.413.07q-.175 0-.32-.04a.8.8 0 0 1-.248-.115a.58.58 0 0 1-.255-.384zM.806 13.693q0-.373.102-.633a.87.87 0 0 1 .302-.399a.8.8 0 0 1 .475-.137q.225 0 .398.097a.7.7 0 0 1 .272.26a.85.85 0 0 1 .12.381h.765v-.072a1.33 1.33 0 0 0-.466-.964a1.4 1.4 0 0 0-.489-.272a1.8 1.8 0 0 0-.606-.097q-.534 0-.911.223q-.375.222-.572.632q-.195.41-.196.979v.498q0 .568.193.976q.197.407.572.626q.375.217.914.217q.439 0 .785-.164t.55-.454a1.27 1.27 0 0 0 .226-.674v-.076h-.764a.8.8 0 0 1-.118.363a.7.7 0 0 1-.272.25a.9.9 0 0 1-.401.087a.85.85 0 0 1-.478-.132a.83.83 0 0 1-.299-.392a1.7 1.7 0 0 1-.102-.627zM6.78 15.29a1.2 1.2 0 0 1-.111-.449h.764a.58.58 0 0 0 .255.384q.106.073.25.114q.142.041.319.041q.245 0 .413-.07a.56.56 0 0 0 .255-.193a.5.5 0 0 0 .085-.29a.39.39 0 0 0-.153-.326q-.152-.12-.463-.193l-.618-.143a1.7 1.7 0 0 1-.539-.214a1 1 0 0 1-.351-.367a1.1 1.1 0 0 1-.123-.524q0-.366.19-.639q.19-.272.527-.422t.777-.149q.456 0 .779.152q.326.153.5.41q.18.255.2.566h-.75a.56.56 0 0 0-.12-.258a.6.6 0 0 0-.246-.181a.9.9 0 0 0-.37-.068q-.324 0-.512.152a.47.47 0 0 0-.184.384q0 .18.143.3a1 1 0 0 0 .404.175l.621.143q.326.075.566.211t.375.358t.135.56q0 .37-.188.656a1.2 1.2 0 0 1-.539.439q-.351.158-.858.158q-.381 0-.665-.09a1.4 1.4 0 0 1-.478-.252a1.1 1.1 0 0 1-.29-.375'/%3E%3C/svg%3E");
+        background-color: currentColor;
+        mask-image: var(--svg-css);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+        margin-right: 0.25rem;
+    }
+
+    .tools-icon {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        --svg-tools: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='%23000'%3E%3Cpath d='M28.354 1.354a.5.5 0 0 0-.141-.805a5.98 5.98 0 0 0-6.798 1.191c-1.698 1.709-2.291 4.393-1.499 6.637L8.377 19.916a5.9 5.9 0 0 0-1.996-.336c-1.714 0-3.376.682-4.559 1.872a6.08 6.08 0 0 0-1.281 6.747a.498.498 0 0 0 .813.153l3.491-3.509c.23-.232.601-.263.793-.068l1.507 1.577c.219.221.209.562-.022.795l-3.478 3.5a.5.5 0 0 0 .141.804a6 6 0 0 0 2.591.588c1.572 0 3.065-.632 4.207-1.78c1.698-1.708 2.291-4.392 1.498-6.636l11.539-11.54a5.9 5.9 0 0 0 1.997.336c1.714 0 3.376-.682 4.559-1.872A6.08 6.08 0 0 0 31.458 3.8a.498.498 0 0 0-.813-.153l-3.491 3.509a.57.57 0 0 1-.801-.01l-1.499-1.499a.55.55 0 0 1-.001-.794zm-4.208 5l1.499 1.499c.599.602 1.625.605 2.218.009l2.93-2.944a5.09 5.09 0 0 1-1.324 4.926c-.997 1.003-2.399 1.577-3.85 1.577c-.683 0-1.33-.128-1.923-.38a.5.5 0 0 0-.549.106l-12 12a.5.5 0 0 0-.107.547c.803 1.91.314 4.375-1.163 5.861a4.96 4.96 0 0 1-4.985 1.258l2.941-2.96c.621-.625.631-1.594.029-2.198l-1.506-1.577c-.581-.585-1.614-.549-2.218.062l-2.93 2.944a5.09 5.09 0 0 1 1.324-4.926c.997-1.003 2.399-1.577 3.85-1.577c.683 0 1.33.128 1.923.38a.5.5 0 0 0 .549-.106l12-12a.5.5 0 0 0 .107-.547c-.803-1.91-.314-4.376 1.163-5.862a4.96 4.96 0 0 1 4.982-1.258l-2.96 2.961a1.546 1.546 0 0 0 0 2.205'/%3E%3Cpath d='M29.21 30.647a.595.595 0 0 1-.827-.002l-10.03-10a.501.501 0 0 0-.706.709l10.029 9.998c.3.301.698.467 1.122.467s.822-.166 1.128-.474l1.429-1.493a1.55 1.55 0 0 0-.001-2.206l-10-10a.5.5 0 0 0-.707.707l9.999 9.999c.229.23.229.564-.007.802zM5.854 3.146l-3-3a.5.5 0 0 0-.707 0l-2 2a.5.5 0 0 0 0 .707l3 3a.5.5 0 0 0 .707.001l.646-.647l7.646 7.646a.5.5 0 1 0 .708-.706L5.207 4.5l.646-.646a.5.5 0 0 0 .001-.708M3.5 4.793L1.207 2.5L2.5 1.207L4.793 3.5z'/%3E%3C/g%3E%3C/svg%3E");
+        background-color: currentColor;
+        mask-image: var(--svg-tools);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+        margin-right: 0.25rem;
+    }
+
+</style>
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">BlazorBuilds</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="basic-table">
+                <span class="table-icon" aria-hidden="true"></span> Basic Table
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="styling">
+                <span class="css-icon" aria-hidden="true"></span> Styling
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="filtering-paging">
+                <span class="page-filter-icon" aria-hidden="true"></span> Filtering / Paging
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="row-selection">
+                <span class="multi-select-icon" aria-hidden="true"></span> Row selection
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="templating">
+                <span class="column-edit-icon" aria-hidden="true"></span> Column Templates
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="building">
+                <span class="tools-icon" aria-hidden="true"></span> Building the component
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weather">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
