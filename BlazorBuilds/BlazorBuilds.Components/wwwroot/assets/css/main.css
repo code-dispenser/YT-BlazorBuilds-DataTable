@@ -27,6 +27,7 @@
   mask-image: var(--svg-caret-up);
   mask-repeat: no-repeat;
   mask-size: 100% 100%;
+  forced-color-adjust: none;
 }
 
 .sort-desc-icon {
@@ -38,6 +39,7 @@
   mask-image: var(--svg-caret-down);
   mask-repeat: no-repeat;
   mask-size: 100% 100%;
+  forced-color-adjust: none;
 }
 
 .not-sorted-icon {
@@ -49,6 +51,7 @@
   mask-image: var(--svg-not-sorted);
   mask-repeat: no-repeat;
   mask-size: 100% 100%;
+  forced-color-adjust: none;
 }
 
 .navigate-next-icon {

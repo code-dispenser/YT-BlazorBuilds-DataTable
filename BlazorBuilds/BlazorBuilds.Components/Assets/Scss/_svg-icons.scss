@@ -7,6 +7,7 @@
     mask-image: var(--svg-caret-up);
     mask-repeat: no-repeat;
     mask-size: 100% 100%;
+    forced-color-adjust: none;
 }
 .sort-desc-icon {
     display: inline-block;
@@ -17,6 +18,7 @@
     mask-image: var(--svg-caret-down);
     mask-repeat: no-repeat;
     mask-size: 100% 100%;
+    forced-color-adjust: none;
 }
 .not-sorted-icon {
     display: inline-block;
@@ -27,6 +29,7 @@
     mask-image: var(--svg-not-sorted);
     mask-repeat: no-repeat;
     mask-size: 100% 100%;
+    forced-color-adjust: none;
 }
 
 //icons below brought in from the Blaozr builds pager video and project
