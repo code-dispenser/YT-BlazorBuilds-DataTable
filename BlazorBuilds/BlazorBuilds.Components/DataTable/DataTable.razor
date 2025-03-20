@@ -8,7 +8,7 @@
 
 @if(_dataTableColumns.Count == 0) return;
 
-<div class="@GlobalValues.DataTable_Class">
+<div class="@GlobalValues.DataTable_Class" data-static="@GlobalValues.GetStyleAsValue(StyleAs)">
     <div class="@GlobalValues.DataTable_Header_Class">
         <div id="@_tableTitleID" class="@BuildClassList(GlobalValues.DataTable_Title_Class, ShowTableTitle == false ? GlobalValues.DataTable_Title_Hidden_Class : "")">@AriaTableTitle</div>
         @if (Filter is not null) @Filter

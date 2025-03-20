@@ -29,6 +29,7 @@ public partial class DataTable<TData>
     [Parameter] public SelectionMode   SelectionMode          { get; set; } = SelectionMode.None;
     [Parameter] public List<TData>     SelectedRows           { get; set; } = [];
     [Parameter] public Func<TData,string?>? RowStyleFunc      { get; set; } = null;
+    [Parameter] public StyleAs         StyleAs                { get; set; } = StyleAs.Dynamic;
 
     [Parameter] public EventCallback<List<TData>> SelectedRowsChanged { get; set; }
 
