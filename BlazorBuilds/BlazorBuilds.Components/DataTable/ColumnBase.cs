@@ -10,7 +10,6 @@ public abstract class ColumnBase<TData> : ComponentBase, IDisposable
 {
     [CascadingParameter] protected DataTable<TData> ParentTable { get; set; } = default!;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     [Parameter] public RenderFragment<TData>? CellTemplate { get; set; } = default!;
     [Parameter] public string?                HeaderStyle  { get; set; } = null;
     [Parameter] public string?                CellStyle    { get; set; } = null;
@@ -41,8 +40,7 @@ public abstract class ColumnBase<TData> : ComponentBase, IDisposable
     }
 
     public void Dispose()
-    {
-        (ParentTable is not null).WhenTrue(() => ParentTable!.RemoveDataTableColumn(this));
-        GC.SuppressFinalize(this);
-    }
+
+        => (ParentTable is not null).WhenTrue(() => ParentTable!.RemoveDataTableColumn(this));
+    
 }

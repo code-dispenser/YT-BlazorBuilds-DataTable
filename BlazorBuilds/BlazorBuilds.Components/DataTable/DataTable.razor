@@ -145,8 +145,8 @@
                 @if (isRowSelectable)
                 {
                     <td>
-                        <input type="checkbox" class="@GlobalValues.DataTable_Checkbox_Selector_Class" checked="@containsRow)"
-                        aria-label="@_selectRowLabel" @onchange="(args) => ToggleSelection((bool)args.Value!, rowItem)" />
+                        <input type="checkbox" class="@GlobalValues.DataTable_Checkbox_Selector_Class" checked="@containsRow"
+                               aria-label="@_selectRowLabel" @onchange="(args) => ToggleSelection((bool)args.Value!, rowItem)" />
                     </td>
                 }
 
@@ -203,7 +203,7 @@
     }
     void AddCheckBox(TData rowItem, bool containsRow)
     {
-        <td style=""><input type="checkbox" class="@GlobalValues.DataTable_Checkbox_Selector_Class" checked="@containsRow" 
+        <td><input type="checkbox" class="@GlobalValues.DataTable_Checkbox_Selector_Class" checked="@containsRow" 
             aria-label="@_selectRowLabel" @onchange="(args) => ToggleSelection((bool)args.Value!, rowItem)" /></td>
     }
 }
