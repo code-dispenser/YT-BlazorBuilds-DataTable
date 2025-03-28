@@ -48,7 +48,7 @@
         @if (false == _dataTableColumns.Contains(column)) _dataTableColumns.Add(column);
     }
     /*
-        * IMPORTANT. Unless you have some sort of event occurring that causes another render, you will need to tell blazor that column components have been added to its collection
+        * IMPORTANT. Unless you have some sort of event occurring or have some asynchronous work being done that yields control which requests a render, you will need to tell blazor that column components have been added to its collection
         * The parent component (this) gets initialized first and will render but there are no columns yet. Then each column will get initialized adding themselves to the collection,
         * so we force a render to have them shown, we only need to do this on the very first parent render.
     */
