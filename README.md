@@ -4,7 +4,9 @@
 
 This repository contains the solution from my YouTube video showing how to build an accessible Data Table / Grid component.
 
-YouTube video: https://youtu.be/fHBayX5ECaU
+YouTube video Part 1 / 2: https://youtu.be/fHBayX5ECaU
+
+YouTube video Part 2 / 2: https://youtu.be/9rteilHrDoo
 
 Coffees welcomed : https://ko-fi.com/codedispenser
 
